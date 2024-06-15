@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    environment {
+        IMG_NAME = "polybot:${BUILD_NUMBER}"
+    }
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'jenkins.docker', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    script {
+                        try {
+                            bat '''
+                            cd polybot
+                            docker login -u %USERNAME% -p %USERPASS%
+                            docker build -t %IMG_NAME% .
+                            '''
+                        } catch (Exception e) {
+                            echo "Docker build failed"
+                            error "Build failed: ${e.message}"
+                        }
+                        bat '''
+                        docker tag %IMG_NAME% eldiabloj/%IMG_NAME%
+                        docker push eldiabloj/%IMG_NAME%
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Trigger Deploy') {
+            steps {
+                script {
+                    build job: 'deploy_polybot', wait: false, parameters: [
+                        string(name: 'IMAGE_TAG', value: "eldiabloj/polybot:${BUILD_NUMBER}")
+                    ]
+                }
+            }
+        }
+    }
+}
