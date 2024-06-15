@@ -1,1 +1,18 @@
-# osher-int-project
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081"
+    volumes:
+      - .:/app
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile nginx
+    ports:
+      - "80:80"
