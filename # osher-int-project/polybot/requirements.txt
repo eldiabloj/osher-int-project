@@ -1,0 +1,16 @@
+certifi==2024.6.2
+charset-normalizer==3.3.2
+idna==3.7
+nompy==0.0.2
+numpy==1.26.4
+opencv-python==4.10.0.82
+protobuf==5.27.1
+pyTelegramBotAPI==4.19.0
+requests==2.32.3
+telebot==0.0.5
+urllib3==2.2.1
+loguru>=0.7.0
+requests>=2.31.0
+flask>=2.3.2
+matplotlib>=3.7.5
+cv2
